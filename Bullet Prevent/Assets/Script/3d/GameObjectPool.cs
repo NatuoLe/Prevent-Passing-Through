@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ThGold.Pool {
-    public class GameObjectPool {
+namespace ThGold.Pool
+{
+    public class GameObjectPool
+    {
         public int initialSize;
 
         public List<GameObject> PoolList;
@@ -17,14 +19,17 @@ namespace ThGold.Pool {
         /// 孵化池
         /// </summary>
         public Transform Hatchery;
-        public GameObjectPool(int initSize, GameObject prefab, Transform parent,Transform hatchery  = null) {
+
+        public GameObjectPool(int initSize, GameObject prefab, Transform parent, Transform hatchery = null)
+        {
             this.prefab = prefab;
             this.Parent = parent;
             PoolList = new List<GameObject>();
             Hatchery = hatchery;
             //Debug.Log("Init" + prefab.gameObject.name);
             initialSize = initSize;
-            for (int i = 0; i < initialSize; i++) {
+            for (int i = 0; i < initialSize; i++)
+            {
                 GameObject obj = GameObject.Instantiate(prefab);
                 obj.gameObject.SetActive(false);
                 if (Hatchery)
@@ -35,21 +40,24 @@ namespace ThGold.Pool {
                 {
                     obj.transform.SetParent(parent);
                 }
-               
+
                 PoolList.Add(obj);
             }
         }
 
-        public virtual GameObject Get() {
-            foreach (GameObject obj in PoolList) {
-                if (!obj.gameObject.activeSelf) {
+        public virtual GameObject Get()
+        {
+            foreach (GameObject obj in PoolList)
+            {
+                if (!obj.gameObject.activeSelf)
+                {
                     obj.transform.SetParent(Parent);
                     obj.gameObject.SetActive(true);
                     return obj;
                 }
             }
 
-            GameObject newObj = GameObject.Instantiate(prefab,Hatchery);
+            GameObject newObj = GameObject.Instantiate(prefab, Hatchery);
             newObj.gameObject.SetActive(true);
             newObj.transform.SetParent(Parent);
             PoolList.Add(newObj);
@@ -57,17 +65,17 @@ namespace ThGold.Pool {
             return newObj;
         }
 
-        public virtual void Return(GameObject obj) {
+        public virtual void Return(GameObject obj)
+        {
             obj.gameObject.SetActive(false);
-            PoolList.Remove(obj);
-            PoolList.Add(obj);
             if (Hatchery)
             {
                 obj.transform.SetParent(Hatchery);
             }
         }
 
-        public List<GameObject> GetAllObjects() {
+        public List<GameObject> GetAllObjects()
+        {
             return PoolList;
         }
 

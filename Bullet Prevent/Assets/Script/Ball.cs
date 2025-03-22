@@ -24,8 +24,20 @@ public class Ball : MonoBehaviour, PoolObject
 
         // 更新时间接口
         time += Time.deltaTime;
+        if (BallManager.Instance.DrawUpdate)
+        {
+            BallManager.Instance.Draw(transform);
+        }
     }
 
+    private void FixedUpdate()
+    {
+        if (BallManager.Instance.DrawFixedUpdate)
+        {
+            BallManager.Instance.Draw(transform);
+        }
+    }
+    
     public void InitPoolObject(float newSpeed, GameObjectPool pool)
     {
         transform.position = new Vector3(0, 0, 0);
@@ -62,7 +74,6 @@ public class Ball : MonoBehaviour, PoolObject
 
     public void OnPreventThrough()
     {
-        Debug.Log("防止穿透");
         transform.position = new Vector3(0, 0, 0);
         InHatchery = true;
         Pool.Return(this.gameObject);
